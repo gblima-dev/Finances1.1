@@ -1,108 +1,71 @@
-import { useState } from 'react';
+import { TouchableOpacity, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Ionicons } from '@expo/vector-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { StatusBar } from 'expo-status-bar';
 
+import { ExpensesContextProvider } from './src/store/expenses-context';
 import DespesasRecentes from './src/screens/DespesasRecentes';
 import TodasDespesas from './src/screens/TodasDespesas';
 import GerenciarDespesa from './src/screens/GerenciarDespesa';
-import IconButton from './src/components/IconButton';
 
-const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+const BottomTabs = createBottomTabNavigator();
 
-const DESPESAS_INICIAIS = [
-  { id: 'd1', descricao: 'Supermercado', valor: 150.0, categoria: 'Alimentação', data: '2026-03-01' },
-  { id: 'd2', descricao: 'Uber', valor: 25.5, categoria: 'Transporte', data: '2026-03-02' },
-  { id: 'd3', descricao: 'Cinema', valor: 40.0, categoria: 'Lazer', data: '2026-03-03' },
-];
-
-function BottomTabScreen({ despesas }) {
+function DespesasOverview() {
   return (
-    <Tab.Navigator
+    <BottomTabs.Navigator
       screenOptions={({ navigation }) => ({
-        headerStyle: { backgroundColor: '#3e2465' },
+        headerStyle: { backgroundColor: '#312e81' },
         headerTintColor: 'white',
-        tabBarStyle: { backgroundColor: '#3e2465' },
-        tabBarActiveTintColor: '#ffbb00',
-        tabBarLabelStyle: { fontSize: 12 },
-        headerRight: ({ tintColor }) => (
-          <IconButton
-            icon="add"
-            size={24}
-            color={tintColor}
+        tabBarStyle: { backgroundColor: '#312e81', borderTopWidth: 0 },
+        tabBarActiveTintColor: '#818cf8',
+        headerRight: () => (
+          <TouchableOpacity
             onPress={() => navigation.navigate('GerenciarDespesa')}
-          />
+            style={{ marginRight: 20 }}
+          >
+            <Text style={{ color: 'white', fontSize: 26, fontWeight: 'bold' }}>+</Text>
+          </TouchableOpacity>
         ),
       })}
     >
-      <Tab.Screen
-        name="DespesasRecentes"
-        options={{
-          title: 'Despesas Recentes',
-          tabBarLabel: 'Recentes',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="hourglass" size={size} color={color} />
-          ),
-        }}
-      >
-        {(props) => <DespesasRecentes {...props} despesas={despesas} />}
-      </Tab.Screen>
-
-      <Tab.Screen
-        name="TodasDespesas"
-        options={{
-          title: 'Todas as Despesas',
-          tabBarLabel: 'Todas',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="wallet-outline" size={size} color={color} />
-          ),
-        }}
-      >
-        {(props) => <TodasDespesas {...props} despesas={despesas} />}
-      </Tab.Screen>
-    </Tab.Navigator>
+      <BottomTabs.Screen
+        name="Recentes"
+        component={DespesasRecentes}
+        options={{ title: 'Despesas Recentes' }}
+      />
+      <BottomTabs.Screen
+        name="Todas"
+        component={TodasDespesas}
+        options={{ title: 'Todas as Despesas' }}
+      />
+    </BottomTabs.Navigator>
   );
 }
 
 export default function App() {
-  const [despesas, setDespesas] = useState(DESPESAS_INICIAIS);
-
-  function adicionarDespesaHandler(novaDespesa) {
-    setDespesas((despesasAtuais) => [novaDespesa, ...despesasAtuais]);
-  }
-
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: { backgroundColor: '#3e2465' },
-          headerTintColor: 'white',
-        }}
-      >
-        <Stack.Screen
-          name="Despesas"
-          options={{ headerShown: false }}
+    <ExpensesContextProvider>
+      <StatusBar style="light" />
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: { backgroundColor: '#312e81' },
+            headerTintColor: 'white',
+          }}
         >
-          {(props) => <BottomTabScreen {...props} despesas={despesas} />}
-        </Stack.Screen>
-
-        <Stack.Screen
-          name="GerenciarDespesa"
-          options={{ title: 'Gerenciar Despesa' }}
-        >
-          {(props) => (
-            <GerenciarDespesa
-              {...props}
-              onAdicionarDespesa={(nova) => {
-                adicionarDespesaHandler(nova);
-                props.navigation.goBack();
-              }}
-            />
-          )}
-        </Stack.Screen>
-      </Stack.Navigator>
-    </NavigationContainer>
+          <Stack.Screen
+            name="DespesasOverview"
+            component={DespesasOverview}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="GerenciarDespesa"
+            component={GerenciarDespesa}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ExpensesContextProvider>
   );
 }

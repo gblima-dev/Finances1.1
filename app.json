@@ -1,0 +1,36 @@
+{
+  "expo": {
+<<<<<<< HEAD
+    "name": "atividade-screen",
+    "slug": "atividade-screen",
+=======
+    "name": "Gerenciador-despesas",
+    "slug": "Gerenciador-despesas",
+>>>>>>> 5086f30 (feat: implementa componentes e filtro de categorias)
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+<<<<<<< HEAD
+    }
+=======
+    },
+    "plugins": [
+      "@react-native-community/datetimepicker"
+    ]
+>>>>>>> 5086f30 (feat: implementa componentes e filtro de categorias)
+  }
+}

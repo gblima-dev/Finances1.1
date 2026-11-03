@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import { useExpenses } from '../store/expenses-context';
 
-// Lista fixa de Categorias exigida no Modal
 const CATEGORIES = ['Alimentação', 'Transporte', 'Lazer', 'Saúde', 'Educação', 'Moradia', 'Outros'];
 
 export default function GerenciarDespesa({ route, navigation }) {
@@ -24,7 +23,6 @@ export default function GerenciarDespesa({ route, navigation }) {
   const isEditing = !!despesaId;
   const despesaSelecionada = isEditing ? expenses.find((e) => e.id === despesaId) : null;
 
-  // 1. Estado único do formulário (exigência da Tarefa 3)
   const [form, setForm] = useState({
     description: despesaSelecionada ? despesaSelecionada.descricao : '',
     amount: despesaSelecionada ? despesaSelecionada.valor.toString() : '',
@@ -41,16 +39,14 @@ export default function GerenciarDespesa({ route, navigation }) {
     });
   }, [navigation, isEditing]);
 
-  // Função centralizada para alterar o estado do formulário
   function handleChange(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }));
-    // Limpa a mensagem de erro do campo assim que o utilizador começa a corrigir
+
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: null }));
     }
   }
 
-  // 2. Validação com as 4 regras exatas da rubrica
   function validate(values) {
     const errs = {};
 
@@ -84,7 +80,7 @@ export default function GerenciarDespesa({ route, navigation }) {
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      return; // Bloqueia o salvamento se houver erros
+      return;
     }
 
     const dadosDespesa = {
@@ -123,7 +119,6 @@ export default function GerenciarDespesa({ route, navigation }) {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
-        {/* Campo Descrição */}
         <Text style={styles.label}>Descrição</Text>
         <TextInput
           placeholder="Ex: Mercado"
@@ -134,7 +129,6 @@ export default function GerenciarDespesa({ route, navigation }) {
         />
         {errors.description && <Text style={styles.errorText}>{errors.description}</Text>}
 
-        {/* Campo Valor com máscara regex de 2 casas decimais */}
         <Text style={styles.label}>Valor (R$)</Text>
         <TextInput
           placeholder="Ex: 49.90"
@@ -150,7 +144,6 @@ export default function GerenciarDespesa({ route, navigation }) {
         />
         {errors.amount && <Text style={styles.errorText}>{errors.amount}</Text>}
 
-        {/* Campo Data */}
         <Text style={styles.label}>Data (AAAA-MM-DD)</Text>
         <TextInput
           placeholder="Ex: 2026-11-03"
@@ -161,7 +154,6 @@ export default function GerenciarDespesa({ route, navigation }) {
         />
         {errors.date && <Text style={styles.errorText}>{errors.date}</Text>}
 
-        {/* Campo Categoria (Modal) */}
         <Text style={styles.label}>Categoria</Text>
         <TouchableOpacity
           style={[styles.input, styles.categoryPicker, errors.category && styles.inputError]}
@@ -173,7 +165,6 @@ export default function GerenciarDespesa({ route, navigation }) {
         </TouchableOpacity>
         {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
 
-        {/* Botões de Ação */}
         <View style={styles.botoesContainer}>
           <TouchableOpacity style={[styles.btn, styles.btnCancel]} onPress={() => navigation.goBack()}>
             <Text style={styles.btnText}>Cancelar</Text>
@@ -191,7 +182,6 @@ export default function GerenciarDespesa({ route, navigation }) {
           </View>
         )}
 
-        {/* Modal para Seleção de Categoria */}
         <Modal visible={modalCategoriaVisivel} animationType="slide" transparent={true}>
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>

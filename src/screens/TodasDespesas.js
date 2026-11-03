@@ -7,15 +7,11 @@ import { Colors } from '../constants/theme';
 export default function TodasDespesas({ navigation }) {
   const { expenses } = useExpenses();
   const [searchQuery, setSearchQuery] = useState('');
-  
-  // Hook do sistema para saber se o celular está em modo Claro ou Escuro
   const colorScheme = useColorScheme();
   const theme = Colors[colorScheme === 'dark' ? 'dark' : 'light'];
 
-  // Hook personalizado de Debounce
   const debouncedSearch = useDebounce(searchQuery, 300);
 
-  // Filtragem com useMemo (sem diferenciar maiúsculas/minúsculas)
   const despesasFiltradas = useMemo(() => {
     return expenses.filter((d) =>
       d.descricao.toLowerCase().includes(debouncedSearch.toLowerCase())
@@ -26,7 +22,6 @@ export default function TodasDespesas({ navigation }) {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      {/* Campo de Busca */}
       <TextInput
         placeholder="Buscar por descrição..."
         placeholderTextColor={theme.subtext}
@@ -35,13 +30,11 @@ export default function TodasDespesas({ navigation }) {
         onChangeText={setSearchQuery}
       />
 
-      {/* Sumário */}
       <View style={[styles.sumarioContainer, { backgroundColor: theme.accent }]}>
         <Text style={styles.sumarioLabel}>Total ({despesasFiltradas.length})</Text>
         <Text style={styles.sumarioValor}>R$ {total.toFixed(2)}</Text>
       </View>
 
-      {/* Lista com Estado Vazio (ListEmptyComponent) */}
       <FlatList
         data={despesasFiltradas}
         keyExtractor={(item) => item.id}
@@ -87,7 +80,7 @@ const styles = StyleSheet.create({
   emptyContainer: { alignItems: 'center', marginTop: 40 },
   emptyText: { fontSize: 16, fontWeight: 'bold' },
   emptySubtext: { fontSize: 14, marginTop: 4 },
-  // Sombras adaptadas por plataforma
+ 
   shadowEffect: Platform.select({
     ios: {
       shadowColor: '#000',

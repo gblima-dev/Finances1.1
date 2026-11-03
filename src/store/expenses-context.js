@@ -24,7 +24,6 @@ export function ExpensesContextProvider({ children }) {
   const [expenses, dispatch] = useReducer(expensesReducer, []);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Carregar dados salvos ao iniciar
   useEffect(() => {
     async function carregarDespesas() {
       try {
@@ -41,7 +40,6 @@ export function ExpensesContextProvider({ children }) {
     carregarDespesas();
   }, []);
 
-  // Salvar dados sempre que a lista for alterada
   useEffect(() => {
     async function salvarDespesas() {
       if (isLoaded) {
